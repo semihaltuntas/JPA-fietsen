@@ -28,6 +28,6 @@ public class Docent {
     }
 
     public BigDecimal getWedde() {
-        return wedde;
+        return  wedde;
     }
 }
