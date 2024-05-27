@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,9 +45,23 @@ public class DocentService {
             throw new DocentBestaatAlException();
         }
     }
+
     @Transactional
-    void deleteById(long id){
+    void deleteById(long id) {
         docentRepository.deleteById(id);
+    }
+
+    List<Docent> findByWedde(BigDecimal wedde) {
+        return docentRepository.findByWeddeOrderByFamilienaam(wedde);
+    }
+    Optional<Docent> findByEmailAdres(String emailAdres){
+        return docentRepository.findByEmailAdres(emailAdres);
+    }
+    int findAantalMetWedde(BigDecimal wedde){
+        return docentRepository.countByWedde(wedde);
+    }
+    List<Docent> findMetGrootsteWedde(){
+        return docentRepository.findMetGrootsteWedde();
     }
 }
 
