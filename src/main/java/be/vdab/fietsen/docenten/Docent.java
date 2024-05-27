@@ -14,6 +14,7 @@ public class Docent {
     private String voornaam;
     private String familienaam;
     private BigDecimal wedde;
+    private String emailAdres;
 
     public long getId() {
         return id;
@@ -29,5 +30,9 @@ public class Docent {
 
     public BigDecimal getWedde() {
         return  wedde;
+    }
+
+    public String getEmailAdres() {
+        return emailAdres;
     }
 }
