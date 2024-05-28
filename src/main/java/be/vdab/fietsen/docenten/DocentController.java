@@ -1,7 +1,11 @@
 package be.vdab.fietsen.docenten;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.Doc;
@@ -85,5 +89,14 @@ public class DocentController {
     @GetMapping("aantalPerWedde")
     List<AantalDocentenPerWedde> findAantalDocentenPerWedde() {
         return docentService.findAantalDocentenPerWedde();
+    }
+
+    @PatchMapping("{id}/wedde")
+    void wijzigWedde(@PathVariable long id, @RequestBody @NotNull @Positive BigDecimal wedde) {
+        try {
+            docentService.wijzigWedde(id, wedde);
+        } catch (OptimisticLockingFailureException ex) {
+            throw new EenAndereGebruikerWijzigdeDeDocentException();
+        }
     }
 }

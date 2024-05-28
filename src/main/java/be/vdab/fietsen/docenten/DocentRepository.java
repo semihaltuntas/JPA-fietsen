@@ -1,6 +1,8 @@
 package be.vdab.fietsen.docenten;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.print.Doc;
@@ -30,4 +32,9 @@ public interface DocentRepository extends JpaRepository<Docent, Long> {
     @Query("select d.wedde as wedde,count(d) as aantal from Docent d group by d.wedde")
     //Interface kullanarak gerekli maasları alias kullanarak dönderme..
     List<AantalDocentenPerWedde> findAantalDocentenPerWedde();
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    //PESSIMISTIC_WRITE (dit wordt in SQL select … for update) Ze kunnen het record ook niet wijzigen of verwijderen
+    @Query("select d from Docent d where d.id = :id")
+    Optional<Docent> findAndLockById(long id);
 }

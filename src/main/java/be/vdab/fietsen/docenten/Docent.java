@@ -17,6 +17,8 @@ public class Docent {
     private String emailAdres;
     @Enumerated(EnumType.STRING) //Bu, JPA'ya enum değerlerini veritabanında string olarak saklamasını söyler.
     private Geslacht geslacht;
+    @Version //@Version anotasyonu,Optimistic JPA'ya bu alanın versiyon bilgisi tutacağını belirtir. Her değişiklik yapıldığında bu alanın değeri otomatik olarak artırılır.
+    private long versie;
 
     protected Docent() { //JPA tarafından kullanılmak üzere gerekli olan parametresiz constructor'dır. Bu constructor'ın korumalı (protected) olması,
         // sınıf dışındaki kodun bu constructor'ı çağırarak eksik bilgiyle Docent nesnesi oluşturmasını engeller.
@@ -52,5 +54,9 @@ public class Docent {
 
     public Geslacht getGeslacht() {
         return geslacht;
+    }
+
+    public void setWedde(BigDecimal wedde) {
+        this.wedde = wedde;
     }
 }

@@ -27,7 +27,7 @@ public class DocentService {
     }
 
     Optional<Docent> findById(long id) {
-        return docentRepository.findById(id);
+        return docentRepository.findAndLockById(id);
     }
 
     boolean existsById(long id) {
@@ -77,6 +77,12 @@ public class DocentService {
 
     List<AantalDocentenPerWedde> findAantalDocentenPerWedde() {
         return docentRepository.findAantalDocentenPerWedde();
+    }
+    @Transactional
+    void wijzigWedde(long id,BigDecimal wedde){
+        docentRepository.findById(id)
+                .orElseThrow(DocentNietGevondenException::new)
+                .setWedde(wedde);
     }
 }
 
