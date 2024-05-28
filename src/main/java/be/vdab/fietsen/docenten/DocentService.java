@@ -54,14 +54,29 @@ public class DocentService {
     List<Docent> findByWedde(BigDecimal wedde) {
         return docentRepository.findByWeddeOrderByFamilienaam(wedde);
     }
-    Optional<Docent> findByEmailAdres(String emailAdres){
+
+    Optional<Docent> findByEmailAdres(String emailAdres) {
         return docentRepository.findByEmailAdres(emailAdres);
     }
-    int findAantalMetWedde(BigDecimal wedde){
+
+    int findAantalMetWedde(BigDecimal wedde) {
         return docentRepository.countByWedde(wedde);
     }
-    List<Docent> findMetGrootsteWedde(){
+
+    List<Docent> findMetGrootsteWedde() {
         return docentRepository.findMetGrootsteWedde();
+    }
+
+    BigDecimal findGrootsteWedde() {
+        return docentRepository.findGrootsteWedde();
+    }
+
+    List<EnkelNaam> findNamen() {
+        return docentRepository.findNamen();
+    }
+
+    List<AantalDocentenPerWedde> findAantalDocentenPerWedde() {
+        return docentRepository.findAantalDocentenPerWedde();
     }
 }
 
