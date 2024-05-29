@@ -3,6 +3,7 @@ package be.vdab.fietsen.docenten;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.print.Doc;
@@ -37,4 +38,9 @@ public interface DocentRepository extends JpaRepository<Docent, Long> {
     //PESSIMISTIC_WRITE (dit wordt in SQL select … for update) Ze kunnen het record ook niet wijzigen of verwijderen
     @Query("select d from Docent d where d.id = :id")
     Optional<Docent> findAndLockById(long id);
+
+    @Modifying //Bulk Update
+    //Bu, özellikle birçok kaydı aynı anda güncellemek gerektiğinde faydalıdır.
+    @Query("update Docent d set d.wedde = d.wedde + :bedrag")
+    void algemeneOpslag(BigDecimal bedrag);
 }

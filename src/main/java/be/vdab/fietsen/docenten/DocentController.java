@@ -94,9 +94,14 @@ public class DocentController {
     @PatchMapping("{id}/wedde")
     void wijzigWedde(@PathVariable long id, @RequestBody @NotNull @Positive BigDecimal wedde) {
         try {
-            docentService.wijzigWedde(id, wedde);
+            docentService.wijzigWedde(id,wedde);
         } catch (OptimisticLockingFailureException ex) {
             throw new EenAndereGebruikerWijzigdeDeDocentException();
         }
+    }
+    private record Opslag(@NotNull @Positive BigDecimal bedrag){}
+    @PostMapping("weddeverhogingen")
+    void algemeneOpslag(@RequestBody @NotNull @Positive BigDecimal bedrag){
+        docentService.algemeneOpslag(bedrag);
     }
 }
