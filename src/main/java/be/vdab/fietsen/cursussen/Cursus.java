@@ -11,7 +11,7 @@ import java.util.UUID;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS) //Her alt sınıf ıcın bir tablo olusturur
 @Table(name = "cursussen")
 
-public class Cursus {
+abstract class Cursus {
     @Id
     private UUID id;
     private String naam;
