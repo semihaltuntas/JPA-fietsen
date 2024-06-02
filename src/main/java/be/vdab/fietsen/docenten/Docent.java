@@ -3,6 +3,9 @@ package be.vdab.fietsen.docenten;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "docenten")
@@ -17,8 +20,15 @@ public class Docent {
     private String emailAdres;
     @Enumerated(EnumType.STRING) //Bu, JPA'ya enum değerlerini veritabanında string olarak saklamasını söyler.
     private Geslacht geslacht;
-    @Version //@Version anotasyonu,Optimistic JPA'ya bu alanın versiyon bilgisi tutacağını belirtir. Her değişiklik yapıldığında bu alanın değeri otomatik olarak artırılır.
+    @Version
+    //@Version anotasyonu,Optimistic JPA'ya bu alanın versiyon bilgisi tutacağını belirtir. Her değişiklik yapıldığında bu alanın değeri otomatik olarak artırılır.
     private long versie;
+    @ElementCollection // Bu anotasyon, bu alanın bir koleksiyon value object'ler içerdiğini belirtir.
+    @CollectionTable(name = "bijnamen", //Koleksiyonun saklanacağı tablo adını belirtir.
+            joinColumns = @JoinColumn(name = "docentId"))//  docentId kolonunun docenten tablosundaki id kolonu ile ilişkilendirildiğini belirtir.
+    @Column(name = "bijnaam") //name = "bijnaam": Takma adların saklanacağı kolon adını belirtir.
+    private Set<String> bijnamen;
+
 
     protected Docent() { //JPA tarafından kullanılmak üzere gerekli olan parametresiz constructor'dır. Bu constructor'ın korumalı (protected) olması,
         // sınıf dışındaki kodun bu constructor'ı çağırarak eksik bilgiyle Docent nesnesi oluşturmasını engeller.
@@ -30,6 +40,23 @@ public class Docent {
         this.wedde = wedde;
         this.emailAdres = emailAdres;
         this.geslacht = geslacht;
+        bijnamen = new LinkedHashSet<>();
+    }
+
+    void voegBijnaamToe(String bijnaam) {
+        if (!bijnamen.add(bijnaam)) {
+            throw new DocentHeeftDezeBijnaamAlException(); //bir öge zaten varsa false döner ve hata fırlatır.
+        }
+    }
+
+    void verwijderBijnaam(String bijnaam) {
+        bijnamen.remove(bijnaam); //Koleksiyondan cıkartır
+    }
+
+    public Set<String> getBijnamen() {
+        //return bijnamen; eğer bunu yazarsak koleysiyon üzerinde dışardan degısıklık yapılabılır.
+        return Collections.unmodifiableSet(bijnamen);
+        //koleksiyonun değiştirilemez bir kopyasını döner. Böylece, dışarıdan bu koleksiyon üzerinde değişiklik yapılması engellenir.
     }
 
     public long getId() {

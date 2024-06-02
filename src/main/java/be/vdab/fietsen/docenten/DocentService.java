@@ -90,5 +90,20 @@ public class DocentService {
     void algemeneOpslag(BigDecimal bedrag) {
         docentRepository.algemeneOpslag(bedrag);
     }
+
+    @Transactional
+        // add een bijnaam met DocentId
+    void voegBijnaamToe(long id, String bijnaam) {
+        docentRepository.findById(id)
+                .orElseThrow(DocentNietGevondenException::new)
+                .voegBijnaamToe(bijnaam); //Bij de transactie commit voegt JPA een record toe aan de table bijnamen.
+    }
+
+    @Transactional
+    void deleteBijnaam(long id, String bijnaam) {
+        docentRepository.findById(id)
+                .orElseThrow(DocentNietGevondenException::new)
+                .verwijderBijnaam(bijnaam); //Bij de transactie commit verwijdert JPA het record in de table bijnamen.
+    }
 }
 
