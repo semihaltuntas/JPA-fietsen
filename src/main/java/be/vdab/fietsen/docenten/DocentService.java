@@ -106,5 +106,9 @@ public class DocentService {
                 .orElseThrow(DocentNietGevondenException::new)
                 .verwijderBijnaam(bijnaam); //Bij de transactie commit verwijdert JPA het record in de table bijnamen.
     }
+
+    List<Docent> findAllMetBijnamen() {
+        return docentRepository.findAllMetBijnamen();
+    }
 }
 

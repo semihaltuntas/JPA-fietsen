@@ -43,4 +43,7 @@ public interface DocentRepository extends JpaRepository<Docent, Long> {
     //Bu, özellikle birçok kaydı aynı anda güncellemek gerektiğinde faydalıdır.
     @Query("update Docent d set d.wedde = d.wedde + :bedrag")
     void algemeneOpslag(BigDecimal bedrag);
+
+    @Query("select d from Docent d join fetch d.bijnamen") // join fetch kullanarak docent kayıtlarını ve onların bijnamen koleksiyonlarını birlikte getirir.
+    List<Docent> findAllMetBijnamen();
 }

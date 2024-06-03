@@ -13,6 +13,8 @@ import javax.print.Doc;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("docenten")
@@ -28,14 +30,24 @@ public class DocentController {
         return docentService.findAantal();
     }
 
+    // Java Record kullanarak kısa ve öz DTO tanımları yapabilir, bu DTO'ları kullanarak veri tabanından sadece gerekli bilgileri alıp döndürebilirsiniz.
+    private record DocentBeknopt(long id, String voornaam, String familienaam) {
+        DocentBeknopt(Docent docent) {
+            this(docent.getId(), docent.getVoornaam(), docent.getFamilienaam());
+        }
+    }
+
     @GetMapping
-    List<Docent> findAll() {
-        return docentService.findAll();
+    Stream<DocentBeknopt> findAll() {
+        return docentService.findAll()
+                .stream()
+                .map(DocentBeknopt::new);
     }
 
     @GetMapping("{id}")
     Docent findById(@PathVariable long id) {
-        return docentService.findById(id).orElseThrow(DocentNietGevondenException::new);
+        return docentService.findById(id)
+                .orElseThrow(DocentNietGevondenException::new);
     }
 
     @GetMapping("{id}/emailAdres")
@@ -64,8 +76,10 @@ public class DocentController {
     }
 
     @GetMapping(params = "wedde")
-    List<Docent> findByWedde(BigDecimal wedde) {
-        return docentService.findByWedde(wedde);
+    Stream<DocentBeknopt> findByWedde(BigDecimal wedde) {
+        return docentService.findByWedde(wedde)
+                .stream()
+                .map(DocentBeknopt::new);
     }
 
     @GetMapping(params = "emailAdres")
@@ -80,8 +94,10 @@ public class DocentController {
     }
 
     @GetMapping("metGrootsteWedde")
-    List<Docent> findMetGrootsteWedde() {
-        return docentService.findMetGrootsteWedde();
+    Stream<DocentBeknopt> findMetGrootsteWedde() {
+        return docentService.findMetGrootsteWedde()
+                .stream()
+                .map(DocentBeknopt::new);
     }
 
     @GetMapping("weddes/grootste")
@@ -100,7 +116,8 @@ public class DocentController {
     }
 
     @PatchMapping("{id}/wedde")
-    void wijzigWedde(@PathVariable long id, @RequestBody @NotNull @Positive BigDecimal wedde) {
+    void wijzigWedde(@PathVariable long id,
+                     @RequestBody @NotNull @Positive BigDecimal wedde) {
         try {
             docentService.wijzigWedde(id, wedde);
         } catch (OptimisticLockingFailureException ex) {
@@ -123,7 +140,19 @@ public class DocentController {
     }
 
     @DeleteMapping("{id}/bijnamen/{bijnaam}")
-    void verwijderBijnaam(@PathVariable long id, @PathVariable String bijnaam) {
+    void verwijderBijnaam(@PathVariable long id,
+                          @PathVariable String bijnaam) {
         docentService.deleteBijnaam(id, bijnaam);
+    }
+    private record DocentBeknoptMetBijnamen(long id, String voornaam, String familienaam, Set<String> bijnamen){
+        DocentBeknoptMetBijnamen(Docent docent){
+            this(docent.getId(), docent.getVoornaam(), docent.getFamilienaam(), docent.getBijnamen());
+        }
+    }
+    @GetMapping ("metBijnamen")
+    Stream<DocentBeknoptMetBijnamen> findAllMetBijnamen(){
+        return docentService.findAllMetBijnamen()
+                .stream()
+                .map(DocentBeknoptMetBijnamen::new);
     }
 }
