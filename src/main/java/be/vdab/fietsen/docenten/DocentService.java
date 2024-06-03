@@ -26,6 +26,7 @@ public class DocentService {
         return docentRepository.findAll(Sort.by("familienaam"));
     }
 
+    @Transactional
     Optional<Docent> findById(long id) {
         return docentRepository.findAndLockById(id);
     }

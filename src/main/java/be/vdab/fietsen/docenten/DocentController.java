@@ -1,6 +1,7 @@
 package be.vdab.fietsen.docenten;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -35,6 +36,13 @@ public class DocentController {
     @GetMapping("{id}")
     Docent findById(@PathVariable long id) {
         return docentService.findById(id).orElseThrow(DocentNietGevondenException::new);
+    }
+
+    @GetMapping("{id}/emailAdres")
+    String findEmailAdresById(@PathVariable long id) {
+        return docentService.findById(id)
+                .orElseThrow(DocentNietGevondenException::new)
+                .getEmailAdres();
     }
 
     @GetMapping("{id}/bestaat")
@@ -94,14 +102,28 @@ public class DocentController {
     @PatchMapping("{id}/wedde")
     void wijzigWedde(@PathVariable long id, @RequestBody @NotNull @Positive BigDecimal wedde) {
         try {
-            docentService.wijzigWedde(id,wedde);
+            docentService.wijzigWedde(id, wedde);
         } catch (OptimisticLockingFailureException ex) {
             throw new EenAndereGebruikerWijzigdeDeDocentException();
         }
     }
-    private record Opslag(@NotNull @Positive BigDecimal bedrag){}
+
+    private record Opslag(@NotNull @Positive BigDecimal bedrag) {
+    }
+
     @PostMapping("weddeverhogingen")
-    void algemeneOpslag(@RequestBody @NotNull @Positive BigDecimal bedrag){
+    void algemeneOpslag(@RequestBody @NotNull @Positive BigDecimal bedrag) {
         docentService.algemeneOpslag(bedrag);
+    }
+
+    @PostMapping("{id}/bijnamen")
+    void voegBijnaamToe(@PathVariable long id,
+                        @RequestBody @NotBlank String bijnaam) {
+        docentService.voegBijnaamToe(id, bijnaam);
+    }
+
+    @DeleteMapping("{id}/bijnamen/{bijnaam}")
+    void verwijderBijnaam(@PathVariable long id, @PathVariable String bijnaam) {
+        docentService.deleteBijnaam(id, bijnaam);
     }
 }
