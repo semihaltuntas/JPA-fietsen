@@ -46,4 +46,6 @@ public interface DocentRepository extends JpaRepository<Docent, Long> {
 
     @Query("select d from Docent d join fetch d.bijnamen") // join fetch kullanarak docent kayıtlarını ve onların bijnamen koleksiyonlarını birlikte getirir.
     List<Docent> findAllMetBijnamen();
+    @Query("select d from Docent d join fetch d.campus") // ->  önceki "N + 1" problemi çözülür. Artık JPA, önceden yüklenmiş olan tüm ilişkili verileri içeren tek bir sorgu gönderir ve performans sorunları önlenir.
+    List<Docent> findAllMetCampussen();
 }

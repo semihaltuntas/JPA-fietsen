@@ -117,5 +117,9 @@ public class DocentService {
     List<Docent> findAllMetBijnamen() {
         return docentRepository.findAllMetBijnamen();
     }
+
+    List<Docent> findAllMetCampussen() {
+        return docentRepository.findAllMetCampussen();
+    }
 }
 

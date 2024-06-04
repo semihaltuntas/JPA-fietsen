@@ -31,7 +31,9 @@ public class Docent {
     @Column(name = "bijnaam") //name = "bijnaam": Takma adların saklanacağı kolon adını belirtir.
     private Set<String> bijnamen;
 
-    @ManyToOne(optional = false) //Yani campusId kolonunun doldurulması zorunludur.
+    @ManyToOne(optional = false , fetch = FetchType.LAZY) //Yani campusId kolonunun doldurulması zorunludur.
+    //Eager default campus nesnesini hemen yükler!
+    // Lazy ->JPA, Docent nesnesini yüklerken ilişkili Campus nesnesini hemen yüklemez. İlişkili nesneye gerçekten erişildiğinde yüklenir. Bu, performansı iyileştirir.
     @JoinColumn(name = "campusId") // campusId kolonuna referans verir
     private Campus campus;
 
