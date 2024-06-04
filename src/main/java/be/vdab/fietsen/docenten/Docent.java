@@ -1,5 +1,7 @@
 package be.vdab.fietsen.docenten;
 
+import be.vdab.fietsen.campussen.Campus;
+import be.vdab.fietsen.campussen.CampusService;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -29,18 +31,23 @@ public class Docent {
     @Column(name = "bijnaam") //name = "bijnaam": Takma adların saklanacağı kolon adını belirtir.
     private Set<String> bijnamen;
 
+    @ManyToOne(optional = false) //Yani campusId kolonunun doldurulması zorunludur.
+    @JoinColumn(name = "campusId") // campusId kolonuna referans verir
+    private Campus campus;
+
 
     protected Docent() { //JPA tarafından kullanılmak üzere gerekli olan parametresiz constructor'dır. Bu constructor'ın korumalı (protected) olması,
         // sınıf dışındaki kodun bu constructor'ı çağırarak eksik bilgiyle Docent nesnesi oluşturmasını engeller.
     }
 
-    public Docent(String voornaam, String familienaam, BigDecimal wedde, String emailAdres, Geslacht geslacht) {
+    public Docent(String voornaam, String familienaam, BigDecimal wedde, String emailAdres, Geslacht geslacht,Campus campus) {
         this.voornaam = voornaam;
         this.familienaam = familienaam;
         this.wedde = wedde;
         this.emailAdres = emailAdres;
         this.geslacht = geslacht;
         bijnamen = new LinkedHashSet<>();
+        this.campus = campus;
     }
 
     void voegBijnaamToe(String bijnaam) {
@@ -85,5 +92,9 @@ public class Docent {
 
     public void setWedde(BigDecimal wedde) {
         this.wedde = wedde;
+    }
+
+    public Campus getCampus() {
+        return campus;
     }
 }

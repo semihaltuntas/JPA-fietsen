@@ -1,9 +1,6 @@
 package be.vdab.fietsen.docenten;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
@@ -12,5 +9,6 @@ public record NieuweDocent(
         @NotBlank String familienaam,
         @NotNull @PositiveOrZero BigDecimal wedde,
         @NotNull @Email String emailAdres,
-        @NotNull Geslacht geslacht) {
-        }
+        @NotNull Geslacht geslacht,
+        @Positive long campusId) {
+}
