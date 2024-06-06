@@ -37,5 +37,6 @@ class DocentTest {
         var campus = new Campus("test", adres);
         var docent = new Docent("test1", "test1", BigDecimal.TEN, "test1.test1@example.org", Geslacht.MAN, campus);
         campus.voegDocentToe(docent); ReflectionTestUtils.setField(docent, "id", 1);
+        //Veritabanına kaydedildiğinde id değeri 1 olarak değiştiriliyor.
         assertThat(campus.getDocenten().contains(docent)).isTrue(); }
 }

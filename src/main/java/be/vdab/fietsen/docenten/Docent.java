@@ -75,7 +75,7 @@ public class Docent {
         return o instanceof Docent docent &&
                 emailAdres.equalsIgnoreCase(docent.emailAdres);
         // in plaats van id ,moeten we gebruik hier emailAdres als uniek.!
-        //elke docent heeft een uniek email adres.
+        // elke docent heeft een uniek email adres.
     }
 
     @Override
