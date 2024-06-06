@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -27,11 +28,12 @@ public class Docent {
     private long versie;
     @ElementCollection // Bu anotasyon, bu alanın bir koleksiyon value object'ler içerdiğini belirtir.
     @CollectionTable(name = "bijnamen", //Koleksiyonun saklanacağı tablo adını belirtir.
-            joinColumns = @JoinColumn(name = "docentId"))//  docentId kolonunun docenten tablosundaki id kolonu ile ilişkilendirildiğini belirtir.
+            joinColumns = @JoinColumn(name = "docentId"))
+//  docentId kolonunun docenten tablosundaki id kolonu ile ilişkilendirildiğini belirtir.
     @Column(name = "bijnaam") //name = "bijnaam": Takma adların saklanacağı kolon adını belirtir.
     private Set<String> bijnamen;
 
-    @ManyToOne(optional = false , fetch = FetchType.LAZY) //Yani campusId kolonunun doldurulması zorunludur.
+    @ManyToOne(optional = false, fetch = FetchType.LAZY) //Yani campusId kolonunun doldurulması zorunludur.
     //Eager default campus nesnesini hemen yükler!
     // Lazy ->JPA, Docent nesnesini yüklerken ilişkili Campus nesnesini hemen yüklemez. İlişkili nesneye gerçekten erişildiğinde yüklenir. Bu, performansı iyileştirir.
     @JoinColumn(name = "campusId") // campusId kolonuna referans verir
@@ -42,7 +44,7 @@ public class Docent {
         // sınıf dışındaki kodun bu constructor'ı çağırarak eksik bilgiyle Docent nesnesi oluşturmasını engeller.
     }
 
-    public Docent(String voornaam, String familienaam, BigDecimal wedde, String emailAdres, Geslacht geslacht,Campus campus) {
+    public Docent(String voornaam, String familienaam, BigDecimal wedde, String emailAdres, Geslacht geslacht, Campus campus) {
         this.voornaam = voornaam;
         this.familienaam = familienaam;
         this.wedde = wedde;
@@ -66,6 +68,19 @@ public class Docent {
         //return bijnamen; eğer bunu yazarsak koleysiyon üzerinde dışardan degısıklık yapılabılır.
         return Collections.unmodifiableSet(bijnamen);
         //koleksiyonun değiştirilemez bir kopyasını döner. Böylece, dışarıdan bu koleksiyon üzerinde değişiklik yapılması engellenir.
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof Docent docent &&
+                emailAdres.equalsIgnoreCase(docent.emailAdres);
+        // in plaats van id ,moeten we gebruik hier emailAdres als uniek.!
+        //elke docent heeft een uniek email adres.
+    }
+
+    @Override
+    public int hashCode() {
+        return emailAdres.toLowerCase().hashCode();
     }
 
     public long getId() {
