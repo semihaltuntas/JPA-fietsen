@@ -13,7 +13,11 @@ public class Taak {
     private long id;
     private String naam;
     @ManyToMany
-    @JoinTable(name = "docententaken", joinColumns = @JoinColumn(name = "taakId"), inverseJoinColumns = @JoinColumn(name = "docentId"))
+    // "Taak" ve "Docent" varlıkları arasında çoktan çoğa bir ilişkiyi temsil ettiğini belirtir
+    //Bu ilişkiyi yönetmek için bir ara tablo (join table) kullanılır.
+    @JoinTable(name = "docententaken",
+            joinColumns = @JoinColumn(name = "taakId"),//taken tablosunun primaryKey i gösterir
+            inverseJoinColumns = @JoinColumn(name = "docentId"))//docenten tablosundakı PKey i gösterir
     private Set<Docent> docenten;
 
     void add(Docent docent) {

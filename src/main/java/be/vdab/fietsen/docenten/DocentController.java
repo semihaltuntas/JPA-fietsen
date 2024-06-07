@@ -189,4 +189,19 @@ public class DocentController {
                 .stream()
                 .map(docent -> new DocentBeknoptMetCampus(docent));
     }
+
+    private record TaakBeknopt(long id, String naam) {
+        TaakBeknopt(Taak taak) {
+            this(taak.getId(), taak.getNaam());
+        }
+    }
+
+    @GetMapping("{id}/taken")
+    Stream<TaakBeknopt> findTaken(@PathVariable long id) {
+        return docentService.findById(id)
+                .orElseThrow(DocentNietGevondenException::new)
+                .getTaken()
+                .stream()
+                .map(taak -> new TaakBeknopt(taak));
+    }
 }

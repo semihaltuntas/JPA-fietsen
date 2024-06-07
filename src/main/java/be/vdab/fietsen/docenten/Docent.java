@@ -39,6 +39,11 @@ public class Docent {
     @JoinColumn(name = "campusId") // campusId kolonuna referans verir
     private Campus campus;
 
+    @ManyToMany(mappedBy = "docenten")
+    //Bu durumda, ilişkiyi yönetmek için bir tarafı seçmiş olursunuz ve JPA diğer tarafı otomatik olarak bulur.
+    @OrderBy("naam")
+    private Set<Taak> taken;
+
 
     protected Docent() { //JPA tarafından kullanılmak üzere gerekli olan parametresiz constructor'dır. Bu constructor'ın korumalı (protected) olması,
         // sınıf dışındaki kodun bu constructor'ı çağırarak eksik bilgiyle Docent nesnesi oluşturmasını engeller.
@@ -52,6 +57,17 @@ public class Docent {
         this.geslacht = geslacht;
         bijnamen = new LinkedHashSet<>();
         this.campus = campus;
+        taken = new LinkedHashSet<>();
+    }
+
+    void add(Taak taak) {
+        if (!taken.add(taak)) {
+            throw new DocentHeeftDezeTaakAlException();
+        }
+    }
+
+    public Set<Taak> getTaken() {
+        return Collections.unmodifiableSet(taken);
     }
 
     void voegBijnaamToe(String bijnaam) {
