@@ -79,10 +79,10 @@ public class DocentController {
     }
 
     @GetMapping(params = "wedde")
-    Stream<DocentBeknopt> findByWedde(BigDecimal wedde) {
+    Stream<DocentBeknoptMetCampus> findByWedde(BigDecimal wedde) {
         return docentService.findByWedde(wedde)
                 .stream()
-                .map(DocentBeknopt::new);
+                .map(DocentBeknoptMetCampus::new);
     }
 
     @GetMapping(params = "emailAdres")

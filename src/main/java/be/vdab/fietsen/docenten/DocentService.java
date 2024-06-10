@@ -121,5 +121,6 @@ public class DocentService {
     List<Docent> findAllMetCampussen() {
         return docentRepository.findAllMetCampussen();
     }
+
 }
 

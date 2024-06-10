@@ -1,10 +1,8 @@
 package be.vdab.fietsen.docenten;
 
+import jakarta.persistence.Entity;
 import jakarta.persistence.LockModeType;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 
 import javax.print.Doc;
 import java.math.BigDecimal;
@@ -12,6 +10,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DocentRepository extends JpaRepository<Docent, Long> {
+    @Override
+    @EntityGraph(attributePaths = "campus")
+    List<Docent> findAll();
+    @EntityGraph(attributePaths = "campus")
+        //attributePaths-> Parametresi ile hangi ilişkili verilerin de çekilmesi gerektiğini belirtirsiniz.
+        // Burada, campus (kampüs) bilgilerini de çekmesini istiyoruz.
     List<Docent> findByWeddeOrderByFamilienaam(BigDecimal wedde);
 
     Optional<Docent> findByEmailAdres(String emailAdres);
